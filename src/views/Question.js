@@ -138,21 +138,17 @@ class Question extends Component {
         <QuestionCardInfo>
           <p>{localStorage.getItem('playerName') || 'Player'}</p>
         </QuestionCardInfo>
-
-        <QuestionCardHeader>
-          <p>
-            {
-              JSON.stringify(this.state.questions[0])
-            }
-          </p>
-        </QuestionCardHeader>
-      
+            <QuestionCardHeader>
+              <p>
+                  {this.state.questions[0] ? this.state.questions[0].question : null}
+              </p>
+            </QuestionCardHeader>
         <QuestionCardBody>
           <AnswersForm>
             <SingleAnswer>
               <label htmlFor="answer">
                 <input type="radio" name="answer" value="answer"/>
-                {this.state.questions.answer}
+                {this.state.questions[0] ? Object.keys(this.state.questions[0].answer) : null}
               </label>
             </SingleAnswer>
             <br/>
