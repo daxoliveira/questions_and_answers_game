@@ -8,6 +8,9 @@ import CorrectAnswerModal from './components/CorrectAnswerModal';
 import WrongAnswerModal from './components/WrongAnswerModal';
 import GameEnd from './views/GameEnd';
 
+import { Provider } from 'react-redux';
+
+
 const AppCard = styled.div`
   text-align: center;
   background-color: var(--color-primary-light);
@@ -24,20 +27,24 @@ const AppCardHeader = styled.header`
 `
 function App() {
   return (
-    <AppCard>
-      <AppCardHeader>
-        <h1>Questions And Answers Game</h1>
-      </AppCardHeader>
+    <Provider>
 
-      <BrowserRouter>
-          <Route path="/" exact component={GameStart} />
-          <Route path="/playermodal" component={PlayerModal} />
-          <Route path="/question" component={Question} />
-          <Route path="/wronganswer" component={WrongAnswerModal} />
-          <Route path="/correctanswer" component={CorrectAnswerModal} />
-          <Route path="/gameend" component={GameEnd} />
-      </BrowserRouter>
-    </AppCard>
+      <AppCard>
+        <AppCardHeader>
+          <h1>Questions And Answers Game</h1>
+        </AppCardHeader>
+
+        <BrowserRouter>
+            <Route path="/" exact component={GameStart} />
+            <Route path="/playermodal" component={PlayerModal} />
+            <Route path="/question" component={Question} />
+            <Route path="/wronganswer" component={WrongAnswerModal} />
+            <Route path="/correctanswer" component={CorrectAnswerModal} />
+            <Route path="/gameend" component={GameEnd} />
+        </BrowserRouter>
+      </AppCard>
+      
+    </Provider>
   );
 }
 
