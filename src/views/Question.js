@@ -167,7 +167,7 @@ class Question extends Component {
       this.setState({correct: true, correctCount: this.state.correctCount+1})
     } else {
       this.setState({incorrect: true})
-    }
+    } 
   }
 
   nextQuestion = () => {
@@ -210,6 +210,7 @@ class Question extends Component {
 
         <QuestionCardHeader>
           <p>{this.state.questions[0].question}</p>
+          {console.log(this.state.questions)}
         </QuestionCardHeader>
 
         <QuestionCardBody>
@@ -241,7 +242,9 @@ class Question extends Component {
         </WrongAnswerModalButton>
       </WrongAnswerModal>
 
-      <p> You've answered {this.state.correctCount} correct so far</p>
+      <p> You've answered {this.state.correctCount === dbQuestions.length
+      ? this.props.history.push('/gameend') 
+      : this.state.correctCount} correct so far</p>
     </QuestionCard>
     )
   }
