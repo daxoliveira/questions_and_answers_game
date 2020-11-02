@@ -105,6 +105,20 @@ class Question extends Component {
     }
   }
   
+  shuffle = (ar) => {
+    //fisher-yates shuffle
+    let shuffledAr = [...ar];
+    let i = ar.length -1
+    while(i > 0) {
+      let swap = Math.floor(Math.random() * i);
+      let tmp = shuffledAr[swap]
+      shuffledAr[swap] = shuffledAr[i]
+      shuffledAr[i] = tmp
+      i--
+    }
+    return shuffledAr
+  }
+  
   showModal = () => {
     this.setState({ show: true });
   };
@@ -113,19 +127,6 @@ class Question extends Component {
     this.setState({ show: false });
   };
   
-  shuffle = (arr) => {
-    const shuffledArr = [];
-    let index;
-    while(shuffledArr.length < arr.length) {
-      index = Math.floor(Math.random() * arr.length);
-      if(!shuffledArr.includes(arr[index])) {
-        shuffledArr.push(arr[index])
-      } 
-    }
-    return shuffledArr
-  }
-  
-
   componentDidMount() {
     const gameStartQuestions = this.shuffle(dbQuestions)
     this.setState({questions: {...gameStartQuestions}})
@@ -138,11 +139,11 @@ class Question extends Component {
         <QuestionCardInfo>
           <p>{localStorage.getItem('playerName') || 'Player'}</p>
         </QuestionCardInfo>
-            <QuestionCardHeader>
-              <p>
-                  {this.state.questions[0] ? this.state.questions[0].question : null}
-              </p>
-            </QuestionCardHeader>
+
+        <QuestionCardHeader>
+          <p>{this.state.questions[0] ? this.state.questions[0].question : null}</p>
+        </QuestionCardHeader>
+
         <QuestionCardBody>
           <AnswersForm>
             <SingleAnswer>
