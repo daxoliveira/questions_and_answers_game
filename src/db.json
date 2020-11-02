@@ -6,7 +6,7 @@
       "Flower": false,
       "Fruit": false,
       "Stone": false,
-      "Vegetable": true
+      "Root": true
     }
   },
 
@@ -14,9 +14,9 @@
     "id": 2,
     "question": "Which country is famous because of its tango dance?",
     "answer": {
-      "Uruguai": false,
-      "Paraguai": false,
-      "Espanha": false,
+      "Uruguay": false,
+      "Paraguay": false,
+      "Spain": false,
       "Argentina": true
     }
   },
@@ -26,8 +26,8 @@
     "question": "Which of these action movie stars is Belgian?",
     "answer": {
       "Sylvester Stallone": false,
-      "Arnold Schwarzenegger": false,
       "Jean Claude Van Damme": true,
+      "Arnold Schwarzenegger": false,
       "Steven Seagal": false
     }
   },
@@ -40,6 +40,72 @@
       "New Years": false,
       "Halloween": true,
       "Easter": false
+    }
+  },
+
+  {
+    "id": 5,
+    "question": "Which cartoon character lives in a pineapple under the sea?",
+    "answer": {
+      "Mickey": false,
+      "Superman": false,
+      "Spongebob": true,
+      "Dora": false
+    }
+  },
+
+  {
+    "id": 6,
+    "question": "How long is the gestation period of an African elephant",
+    "answer": {
+      "22 months": true,
+      "14 months": false,
+      "26 months": false,
+      "3 years": false
+    }
+  },
+
+  {
+    "id": 7,
+    "question": "Who is the group of people sworn to make a decision/deliver a verdict in court?",
+    "answer": {
+      "Plaintiff": false,
+      "Jury": true,
+      "Prosecutors": false,
+      "Judges": false
+    }
+  },
+
+  {
+    "id": 8,
+    "question": "What is the slogan of Apple Inc.?",
+    "answer": {
+      "Think different": true,
+      "Just do it": false,
+      "The breakfast of champions": false,
+      "The relentless pursuit of perfection": false
+    }
+  },
+
+  {
+    "id": 9,
+    "question": "The Roman God of War inspired the name of which planet?",
+    "answer": {
+      "Saturn": false,
+      "Venus": false,
+      "Mercury": false,
+      "Mars": true
+    }
+  },
+
+  {
+    "id": 10,
+    "question": "What classic video game requires you to eat all the dots throughout a maze?",
+    "answer": {
+      "Pac-Man": true,
+      "Tetris": false,
+      "Donkey Kong": false,
+      "Super Mario Bros": false
     }
   }
 
