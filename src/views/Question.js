@@ -179,6 +179,16 @@ class Question extends Component {
     this.state.formRef.current.reset()
   }
 
+  restart = () => {
+    this.setState({
+     questions: this.shuffle(dbQuestions),
+     correctCount: 0,
+     answer: null
+    })
+    this.hideIncorrect()
+    this.state.formRef.current.reset()
+  }
+
   hideCorrect = () => {
     this.setState({ correct: false });
   };
@@ -213,14 +223,16 @@ class Question extends Component {
         </CorrectAnswerModalButton>
       </CorrectAnswerModal>
 
-      <WrongAnswerModal show={this.state.show} handleClose={this.hideModal}>
+
+
+      <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
           <h2>
             Sorry, you didn't get it right this time!
           </h2>
         <WrongAnswerModalButton type="submit">
           Quit Playing
         </WrongAnswerModalButton>
-        <WrongAnswerModalButton type="submit">
+        <WrongAnswerModalButton type="submit" onClick={this.restart}>
           Restart the Game
         </WrongAnswerModalButton>
       </WrongAnswerModal>
