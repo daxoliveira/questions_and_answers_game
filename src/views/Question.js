@@ -189,6 +189,10 @@ class Question extends Component {
     this.state.formRef.current.reset()
   }
 
+  quit = () => {
+    this.props.history.push('/');
+  };
+
   hideCorrect = () => {
     this.setState({ correct: false });
   };
@@ -229,7 +233,7 @@ class Question extends Component {
           <h2>
             Sorry, you didn't get it right this time!
           </h2>
-        <WrongAnswerModalButton type="submit">
+        <WrongAnswerModalButton type="submit" onClick={this.quit}>
           Quit Playing
         </WrongAnswerModalButton>
         <WrongAnswerModalButton type="submit" onClick={this.restart}>
