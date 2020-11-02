@@ -9,7 +9,7 @@ import WrongAnswerModal from './components/WrongAnswerModal';
 import GameEnd from './views/GameEnd';
 
 import { Provider } from 'react-redux';
-
+import store from './store';
 
 const AppCard = styled.div`
   text-align: center;
@@ -27,7 +27,7 @@ const AppCardHeader = styled.header`
 `
 function App() {
   return (
-    <Provider>
+    <Provider store={store}>
 
       <AppCard>
         <AppCardHeader>
