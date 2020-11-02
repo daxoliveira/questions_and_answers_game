@@ -170,6 +170,15 @@ class Question extends Component {
     }
   }
 
+  nextQuestion = () => {
+    this.setState({ 
+      questions: this.state.questions.slice(1,this.state.questions.length),
+      answer: null
+    })
+    this.hideCorrect()
+    this.state.formRef.current.reset()
+  }
+
   hideCorrect = () => {
     this.setState({ correct: false });
   };
@@ -195,11 +204,11 @@ class Question extends Component {
 
 
 
-      <CorrectAnswerModal show={this.state.show} handleClose={this.hideIncorrect}>
+      <CorrectAnswerModal show={this.state.correct} handleClose={this.hideIncorrect}>
         <h2>
           Congrats, you've got the correct answer!
         </h2>
-        <CorrectAnswerModalButton type="submit">
+        <CorrectAnswerModalButton type="submit" onClick={this.nextQuestion}>
           Next Question
         </CorrectAnswerModalButton>
       </CorrectAnswerModal>
