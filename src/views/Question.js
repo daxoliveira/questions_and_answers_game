@@ -102,6 +102,7 @@ class Question extends Component {
     
     this.state = {
       questions: this.shuffle(dbQuestions),
+      correctCount: 0,
       formRef: React.createRef(),
       show: false
     }
@@ -134,7 +135,7 @@ class Question extends Component {
           }
         </label>
         <br/>
-        <SubmitAnswerButton type="button">
+        <SubmitAnswerButton type="button" onClick={this.checkAnswer}>
           Submit Answer
         </SubmitAnswerButton>
       </AnswersForm>
@@ -155,11 +156,26 @@ class Question extends Component {
   }
 
   showModal = () => {
-    this.setState({ show: true });
+    this.setState({show: true})
+  }
+
+  checkAnswer = (e) => {
+    e.preventDefault();
+    if (this.state.answer && 
+      this.state.questions[0]
+      .answer[this.state.answer]) {
+      this.setState({correct: true, correctCount: this.state.correctCount+1})
+    } else {
+      this.setState({incorrect: true})
+    }
+  }
+
+  hideCorrect = () => {
+    this.setState({ correct: false });
   };
   
-  hideModal = () => {
-    this.setState({ show: false });
+  hideIncorrect = () => {
+    this.setState({ incorrect: false });
   };
       
   render() {
@@ -170,7 +186,7 @@ class Question extends Component {
         </QuestionCardInfo>
 
         <QuestionCardHeader>
-          <p>{this.state.questions[0] ? this.state.questions[0].question : null}</p>
+          <p>{this.state.questions[0].question}</p>
         </QuestionCardHeader>
 
         <QuestionCardBody>
@@ -179,7 +195,7 @@ class Question extends Component {
 
 
 
-      <CorrectAnswerModal show={this.state.show} handleClose={this.hideModal}>
+      <CorrectAnswerModal show={this.state.show} handleClose={this.hideIncorrect}>
         <h2>
           Congrats, you've got the correct answer!
         </h2>
@@ -200,6 +216,7 @@ class Question extends Component {
         </WrongAnswerModalButton>
       </WrongAnswerModal>
 
+      <p> You've answered {this.state.correctCount} correct so far</p>
     </QuestionCard>
     )
   }
