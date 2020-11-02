@@ -61,6 +61,7 @@ const SingleAnswer = styled.div`
   font-size: calc(10px + 2vmin);
   display: flex;
   justify-content: left;
+  align-items: center;
 `
 const SubmitAnswerButton = styled.button`
   background-color: var(--color-primary-dark);
@@ -100,7 +101,8 @@ class Question extends Component {
     super(props)
     
     this.state = {
-      questions: [],
+      questions: this.shuffle(dbQuestions),
+      formRef: React.createRef(),
       show: false
     }
   }
@@ -118,7 +120,40 @@ class Question extends Component {
     }
     return shuffledAr
   }
-  
+
+  questionOptions = (question) => {
+    return (
+      <AnswersForm ref={this.state.formRef}>
+        <label htmlFor="answer">
+          {
+            Object.entries(question.answer)
+            .map((obj) => {
+              return this.displayOption(question, obj[0])
+              }
+            )
+          }
+        </label>
+        <br/>
+        <SubmitAnswerButton type="button">
+          Submit Answer
+        </SubmitAnswerButton>
+      </AnswersForm>
+    )
+  }
+
+  displayOption = (q, option) => {
+    return (
+      <SingleAnswer>
+        <input
+          type="radio"
+          name={q.id}
+          value={option}
+          onClick={() => this.setState({answer: option})}
+        /> {option}
+      </SingleAnswer>
+    )
+  }
+
   showModal = () => {
     this.setState({ show: true });
   };
@@ -126,14 +161,8 @@ class Question extends Component {
   hideModal = () => {
     this.setState({ show: false });
   };
-  
-  componentDidMount() {
-    const gameStartQuestions = this.shuffle(dbQuestions)
-    this.setState({questions: {...gameStartQuestions}})
-  }
-    
+      
   render() {
-    
     return (
       <QuestionCard>
         <QuestionCardInfo>
@@ -145,19 +174,10 @@ class Question extends Component {
         </QuestionCardHeader>
 
         <QuestionCardBody>
-          <AnswersForm>
-            <SingleAnswer>
-              <label htmlFor="answer">
-                <input type="radio" name="answer" value="answer"/>
-                {this.state.questions[0] ? Object.keys(this.state.questions[0].answer) : null}
-              </label>
-            </SingleAnswer>
-            <br/>
-            <SubmitAnswerButton type="button" onClick={this.showModal}>
-              Submit Answer
-            </SubmitAnswerButton>
-          </AnswersForm>
+          {this.questionOptions(this.state.questions[0])}
         </QuestionCardBody>
+
+
 
       <CorrectAnswerModal show={this.state.show} handleClose={this.hideModal}>
         <h2>
