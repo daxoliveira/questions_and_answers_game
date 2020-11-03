@@ -1,7 +1,13 @@
 import { SHUFFLE_QUESTIONS } from './types';
 
-export function shuffleQuestions() {
-  return function(dispatch) {
-    
-  }
+const questionActions = () => dispatch => {
+  fetch('../db.json')
+    .then(res => res.json())
+    .then(questions => 
+      dispatch({
+        type: SHUFFLE_QUESTIONS,
+        payload: questions
+      }))
 }
+  
+export default questionActions;
