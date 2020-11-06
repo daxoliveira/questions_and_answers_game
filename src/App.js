@@ -4,12 +4,10 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import GameStart from './views/GameStart';
 import PlayerModal from './components/PlayerModal';
 import Question from './views/Question';
-import CorrectAnswerModal from './components/CorrectAnswerModal';
-import WrongAnswerModal from './components/WrongAnswerModal';
 import GameEnd from './views/GameEnd';
 
-import { Provider } from 'react-redux';
-import store from './store';
+import { connect } from 'react-redux';
+import { increment, decrement} from './redux/index'
 
 const AppCard = styled.div`
   text-align: center;
@@ -25,27 +23,40 @@ const AppCardHeader = styled.header`
   font-size: calc(10px + 2vmin);
   color: var(--font-color-primary-light);
 `
-function App() {
-  return (
-    <Provider store={store}>
 
+function App(props) {
+  return (
       <AppCard>
         <AppCardHeader>
           <h1>Questions And Answers Game</h1>
         </AppCardHeader>
 
+        <div>
+        <h1>This is the count {props.count}</h1>
+        <button onClick={props.apples}>-</button>
+        <button onClick={props.oranges}>+</button>
+      </div>
+
         <BrowserRouter>
             <Route path="/" exact component={GameStart} />
             <Route path="/playermodal" component={PlayerModal} />
             <Route path="/question" component={Question} />
-            <Route path="/wronganswer" component={WrongAnswerModal} />
-            <Route path="/correctanswer" component={CorrectAnswerModal} />
             <Route path="/gameend" component={GameEnd} />
         </BrowserRouter>
       </AppCard>
-      
-    </Provider>
   );
 }
 
-export default App;
+function mapStateToProps(globalState) {
+  return {
+    count: globalState
+  }
+}
+
+const mapDispatchToProps = {
+  oranges: increment,
+  apples: decrement
+}
+export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+// export default App;
