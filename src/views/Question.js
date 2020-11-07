@@ -1,29 +1,29 @@
 import React from 'react';
-// import styled from 'styled-components';
+import styled from 'styled-components';
 // import CorrectAnswerModal from '../components/CorrectAnswerModal';
 // import WrongAnswerModal from '../components/WrongAnswerModal';
 // import dbQuestions from '../db.json';
 
 import { connect } from 'react-redux';
-import { increment, decrement} from '../redux'
+import { shuffleQuestions } from '../redux'
 
-// const QuestionCard = styled.div`
-//   position:fixed;
-//   width: 50vw;
-//   top:50%;
-//   left:50%;
-//   transform: translate(-50%,-50%);
-//   padding: 1vw;
-//   margin: 2vw;
-//   border-radius: 10px;
-//   background-color: var(--color-primary-dark);
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   font-size: calc(10px + 2vmin);
-//   color: var(--font-color-primary-light);
-// `
+const QuestionCard = styled.div`
+  position:fixed;
+  width: 50vw;
+  top:50%;
+  left:50%;
+  transform: translate(-50%,-50%);
+  padding: 1vw;
+  margin: 2vw;
+  border-radius: 10px;
+  background-color: var(--color-primary-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--font-color-primary-light);
+`
 // const QuestionCardInfo = styled.div`
 //   background-color: var(--color-primary-dark);
 //   width: 100%;
@@ -34,15 +34,15 @@ import { increment, decrement} from '../redux'
 //   color: var(--font-color-secondary);
 //   border-radius: 2vh;
 // `
-// const QuestionCardHeader = styled.div`
-//   background-color: var(--color-secondary);
-//   width: 100%;
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   font-size: calc(10px + 2vmin);
-//   color: var(--font-color-primary-dark);
-// `
+const QuestionCardHeader = styled.div`
+  background-color: var(--color-secondary);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--font-color-primary-dark);
+`
 // const QuestionCardBody = styled.div`
 //   background-color: var(--color-secondary);
 //   width: 100%;
@@ -81,7 +81,7 @@ import { increment, decrement} from '../redux'
 //   display: flex;
 //   flex-direction: column;
 //   align-items: center;
-//   justify-content: center;
+//   justify-content: center;X            `1`
 //   font-size: calc(10px + 2vmin);
 //   color: var(--font-color-primary-dark);
 //   border-radius: 2vh;
@@ -99,17 +99,17 @@ import { increment, decrement} from '../redux'
 //   `
 
 
-// class Question extends Component {
-//   constructor(props) {
-//     super(props)
+function Question(props) {
+  // constructor(props) {
+  //   super(props)
     
-//     this.state = {
-//       questions: this.shuffle(dbQuestions),
-//       correctCount: 0,
-//       formRef: React.createRef(),
-//       show: false
-//     }
-//   }
+  //   this.state = {
+  //     questions: this.shuffle(dbQuestions),
+  //     correctCount: 0,
+  //     formRef: React.createRef(),
+  //     show: false
+  //   }
+  // }
   
   // shuffle = (ar) => {
   //   //fisher-yates shuffle
@@ -203,70 +203,121 @@ import { increment, decrement} from '../redux'
   // hideIncorrect = () => {
   //   this.setState({ incorrect: false });
   // };
-      
-  // render() {
-    function Question(props){
-    return (
+
+  return (
         
-      <div>
-        <h1>This is the count {props.count}</h1>
-        <button onClick={props.apples}>-</button>
-        <button onClick={props.oranges}>+</button>
-      </div>
-    //   <QuestionCard>
-    //     <QuestionCardInfo>
-    //       <p>{localStorage.getItem('playerName') || 'Player'}</p>
-    //     </QuestionCardInfo>
+      <QuestionCard>
 
-    //     <QuestionCardHeader>
-    //       <p>{this.state.questions[0].question}</p>
-    //       {console.log(this.state.questions)}
-    //     </QuestionCardHeader>
-
-    //     <QuestionCardBody>
-    //       {this.questionOptions(this.state.questions[0])}
-    //     </QuestionCardBody>
-
-
-    //   <CorrectAnswerModal show={this.state.correct} handleClose={this.hideIncorrect}>
-    //     <h2>
-    //       Congrats, you've got the correct answer!
-    //     </h2>
-    //     <CorrectAnswerModalButton type="submit" onClick={this.nextQuestion}>
-    //       Next Question
-    //     </CorrectAnswerModalButton>
-    //   </CorrectAnswerModal>
+        {props.state.questions.map((e) => {
+          return (
+            <>
+              <QuestionCardHeader key={e.id}>
+                <p>{e.question}</p>
+              </QuestionCardHeader>
+            </>
+          )})
+        }
+        {/* <QuestionCardInfo>
+          <p>{localStorage.getItem('playerName') || 'Player'}</p>
+        </QuestionCardInfo> */}
 
 
 
-    //   <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
-    //       <h2>
-    //         Sorry, you didn't get it right this time!
-    //       </h2>
-    //     <WrongAnswerModalButton type="submit" onClick={this.quit}>
-    //       Quit Playing
-    //     </WrongAnswerModalButton>
-    //     <WrongAnswerModalButton type="submit" onClick={this.restart}>
-    //       Restart the Game
-    //     </WrongAnswerModalButton>
-    //   </WrongAnswerModal>
+          
+                        {/* <QuestionCardBody key={e.id}>
+                          <AnswersForm>
+                            <SingleAnswer>
+                              <input
+                                type="radio"
+                                name={e.questions.answer[0]}
+                                value={e.questions.answer[0]}
+                              />
+                              <p>{Object.keys(e.questions.answer[0])}</p>
+                            </SingleAnswer>
+                            
+                            <SingleAnswer>
+                              <input
+                                type="radio"
+                                name={e.questions.answer[1]}
+                                value={e.questions.answer[1]}
+                              />
+                              <p>{Object.keys(e.questions.answer[1])}</p>
+                            </SingleAnswer>
+          
+                            <SingleAnswer>
+                              <input
+                                type="radio"
+                                name={e.questions.answer[2]}
+                                value={e.questions.answer[2]}
+                              />
+                              <p>{Object.keys(e.questions.answer[2])}</p>
+                            </SingleAnswer>
+          
+                            <SingleAnswer>
+                              <input
+                                type="radio"
+                                name={e.questions.answer[3]}
+                                value={e.questions.answer[3]}
+                              />
+                              <p>{Object.keys(e.questions.answer[3])}</p>
+                            </SingleAnswer>
+                            
+                            <SubmitAnswerButton type="button">
+                              Submit Answer
+                            </SubmitAnswerButton>
+                          </AnswersForm>
+                        </QuestionCardBody> */}
+        {/* {props.state.questions[0].answer.map((e) => {
+          return (
+              )
+            }
+          )
+        }  */}
 
-    //   <p> You've answered {this.state.correctCount === dbQuestions.length
-    //   ? this.props.history.push('/gameend') 
-    //   : this.state.correctCount} correct so far</p>
-    // </QuestionCard>
-    )
-  }
+        {/* <QuestionCardBody>
+          {this.questionOptions(this.state.questions[0])}
+        </QuestionCardBody> */}
 
 
-function mapStateToProps(globalState) {
+      {/* <CorrectAnswerModal show={this.state.correct} handleClose={this.hideIncorrect}>
+        <h2>
+          Congrats, you've got the correct answer!
+        </h2>
+        <CorrectAnswerModalButton type="submit" onClick={this.nextQuestion}>
+          Next Question
+        </CorrectAnswerModalButton>
+      </CorrectAnswerModal> */}
+
+
+
+      {/* <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
+          <h2>
+            Sorry, you didn't get it right this time!
+          </h2>
+        <WrongAnswerModalButton type="submit" onClick={this.quit}>
+          Quit Playing
+        </WrongAnswerModalButton>
+        <WrongAnswerModalButton type="submit" onClick={this.restart}>
+          Restart the Game
+        </WrongAnswerModalButton>
+      </WrongAnswerModal> */}
+
+      {/* <p> You've answered {this.state.correctCount === dbQuestions.length
+      ? this.props.history.push('/gameend') 
+      : this.state.correctCount} correct so far</p> */}
+    </QuestionCard>
+  )
+}
+
+
+function mapStateToProps(state) {
   return {
-    count: globalState
+    state
   }
 }
 
 const mapDispatchToProps = {
-  oranges: increment,
-  apples: decrement
+  questions: shuffleQuestions
 }
+
 export default connect(mapStateToProps, mapDispatchToProps)(Question);
