@@ -8,21 +8,16 @@ export function shuffleQuestions() {
   }
 }
 
-// export function displaySingleQuestion() {
+// export function sumPlusOneOnIndex() {
 //   return {
-//     type: "DISPLAY_SINGLE_QUESTION"
-//   }
-// }
-
-// export function displayQuestionAnswers() {
-//   return {
-//     type: "DISPLAY_QUESTION_ANSWERS"
+//     type: "SUM_PLUS_ONE_ON_INDEX"
 //   }
 // }
 
 //Initial State
 const initialState = {
-  questions: dbQuestions
+  questions: dbQuestions,
+  index: 0
 }
 
 //Reducer
@@ -47,9 +42,13 @@ function reducer(state = initialState, action) {
         return {
         ...state,
         questions: questionsShuffled,
-        answers: state.questions.answer
-
         }
+    }
+    case "SUM_PLUS_ONE_ON_INDEX": {
+      return {
+        ...state,
+        index: state.index + 1
+      }
     }
     default:
       return state
@@ -62,3 +61,5 @@ store.subscribe(() => console.log(store.getState()))
 export default store
 
 store.dispatch(shuffleQuestions())
+store.dispatch(sumPlusOneOnIndex())
+
