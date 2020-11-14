@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-// import CorrectAnswerModal from '../components/CorrectAnswerModal';
+import CorrectAnswerModal from '../components/CorrectAnswerModal';
 // import WrongAnswerModal from '../components/WrongAnswerModal';
 import { connect } from 'react-redux';
 // We need to import every action creator function we want to send to the reducer here
-// import { shuffleQuestions, sumPlusOneOnIndex } from '../redux'
+import { shuffleQuestions, correctAnswer } from '../redux'
 
 const QuestionCard = styled.div`
   position:fixed;
@@ -55,17 +55,17 @@ const SingleAnswer = styled.button`
   justify-content: left;
   align-items: center;
 `
-// const CorrectAnswerModalButton = styled.button`
-//   background-color: var(--color-primary-lighter);
-//   min-height: 8vh;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   font-size: calc(10px + 2vmin);
-//   color: var(--font-color-primary-dark);
-//   border-radius: 2vh;
-// `
+const CorrectAnswerModalButton = styled.button`
+  background-color: var(--color-primary-lighter);
+  min-height: 8vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--font-color-primary-dark);
+  border-radius: 2vh;
+`
 // const WrongAnswerModalButton = styled.button`
 //   background-color: var(--color-primary-lighter);
 //   min-height: 8vh;
@@ -83,9 +83,10 @@ function Question(props) {
   const questions = props.questions
   const index = props.index
 
-
   // Extraction of the obj answer from the 
   const alternatives = Object.keys(questions[index].answer)
+
+
 
   // Method to compare the value of the alternative clicked to its boolean key value
   const checkAlternative = (event) => {
@@ -101,14 +102,13 @@ function Question(props) {
     questions[index].answer[value]
 
         // If true, display Correct Answer Modal
-      ? console.log(index)
+      ? props.correctAnswer()
 
         // If false, display Wrong Answer Modal
       : console.log("errou")
   }
 
-
-
+  
   return (
     <QuestionCard>
       <QuestionCardHeader>
@@ -125,7 +125,6 @@ function Question(props) {
           {
             // Display of each possible answer in btn format from alternatives array
             alternatives.map((answer) => {
-              console.log(answer);
               return(
                 <SingleAnswer onClick={(event) => {checkAlternative(event)}} value={answer}>
                   {answer}
@@ -136,14 +135,14 @@ function Question(props) {
         </AnswersForm>
       </QuestionCardBody>
 
-      {/* <CorrectAnswerModal show={this.state.correct} handleClose={this.hideIncorrect}>
+      <CorrectAnswerModal show={props.show}>
         <h2>
           Congrats, you've got the correct answer!
         </h2>
-        <CorrectAnswerModalButton type="submit" onClick={this.nextQuestion}>
+        <CorrectAnswerModalButton type="submit">
           Next Question
         </CorrectAnswerModalButton>
-      </CorrectAnswerModal> */}
+      </CorrectAnswerModal>
 
        {/* <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
           <h2>
@@ -168,7 +167,8 @@ function mapStateToProps(state) {
   // the values are the actual parts of the global state your comp wants
   return {
     questions: state.questions,
-    index: state.index
+    index: state.index,
+    show: state.show
   }
 }
 
@@ -178,8 +178,8 @@ const mapDispatchToProps = {
   // the keys are the name of the prop your comp wants to use
   // however, the values are going to the ACTIONS that we want to able to
   // dispatch to our reducer
-  // shuffleQuestions: shuffleQuestions,
-  // sumPlusOneOnIndex: sumPlusOneOnIndex
+  shuffleQuestions: shuffleQuestions,
+  correctAnswer: correctAnswer
 }
 
 // Connect is a func that returns a func in which we want to pass this comp

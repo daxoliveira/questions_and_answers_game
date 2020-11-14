@@ -8,16 +8,25 @@ export function shuffleQuestions() {
   }
 }
 
-// export function sumPlusOneOnIndex() {
-//   return {
-//     type: "SUM_PLUS_ONE_ON_INDEX"
-//   }
-// }
+export function correctAnswer() {
+  return {
+    type: "CORRECT_ANSWER"
+  }
+}
+
+export function incorrectAnswer() {
+  return {
+    type: "INCORRECT_ANSWER"
+  }
+}
 
 //Initial State
 const initialState = {
   questions: dbQuestions,
-  index: 0
+  index: 0,
+  correct: false,
+  correctCount: 0,
+  incorrect: false
 }
 
 //Reducer
@@ -44,10 +53,17 @@ function reducer(state = initialState, action) {
         questions: questionsShuffled,
         }
     }
-    case "SUM_PLUS_ONE_ON_INDEX": {
+    case "CORRECT_ANSWER": {
       return {
         ...state,
-        index: state.index + 1
+        correct: true,
+        correctCount: state.correctCount + 1
+      }
+    }
+    case "INCORRECT_ANSWER": {
+      return {
+        ...state,
+        incorrect: true,
       }
     }
     default:
@@ -61,5 +77,3 @@ store.subscribe(() => console.log(store.getState()))
 export default store
 
 store.dispatch(shuffleQuestions())
-store.dispatch(sumPlusOneOnIndex())
-
