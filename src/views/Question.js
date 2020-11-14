@@ -1,10 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import CorrectAnswerModal from '../components/CorrectAnswerModal';
-// import WrongAnswerModal from '../components/WrongAnswerModal';
+import WrongAnswerModal from '../components/WrongAnswerModal';
 import { connect } from 'react-redux';
+
 // We need to import every action creator function we want to send to the reducer here
-import { shuffleQuestions, correctAnswer } from '../redux'
+import { 
+  shuffleQuestions, 
+  correctAnswer,
+  incorrectAnswer,
+} from '../redux'
 
 const QuestionCard = styled.div`
   position:fixed;
@@ -66,17 +71,17 @@ const CorrectAnswerModalButton = styled.button`
   color: var(--font-color-primary-dark);
   border-radius: 2vh;
 `
-// const WrongAnswerModalButton = styled.button`
-//   background-color: var(--color-primary-lighter);
-//   min-height: 8vh;
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   font-size: calc(10px + 2vmin);
-//   color: var(--font-color-primary-dark);
-//   border-radius: 2vh;
-//   `
+const WrongAnswerModalButton = styled.button`
+  background-color: var(--color-primary-lighter);
+  min-height: 8vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: var(--font-color-primary-dark);
+  border-radius: 2vh;
+  `
 
 function Question(props) {
   // Extraction of pieces of state questions and index
@@ -105,7 +110,7 @@ function Question(props) {
       ? props.correctAnswer()
 
         // If false, display Wrong Answer Modal
-      : console.log("errou")
+      : props.incorrectAnswer()
   }
 
   
@@ -135,7 +140,7 @@ function Question(props) {
         </AnswersForm>
       </QuestionCardBody>
 
-      <CorrectAnswerModal show={props.show}>
+      <CorrectAnswerModal show={props.correct}>
         <h2>
           Congrats, you've got the correct answer!
         </h2>
@@ -144,17 +149,17 @@ function Question(props) {
         </CorrectAnswerModalButton>
       </CorrectAnswerModal>
 
-       {/* <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
+       <WrongAnswerModal show={props.incorrect} >
           <h2>
             Sorry, you didn't get it right this time!
           </h2>
-         <WrongAnswerModalButton type="submit" onClick={this.quit}>
+         <WrongAnswerModalButton type="submit">
            Quit Playing
          </WrongAnswerModalButton>
-         <WrongAnswerModalButton type="submit" onClick={this.restart}>
+         <WrongAnswerModalButton type="submit">
            Restart the Game
          </WrongAnswerModalButton>
-       </WrongAnswerModal> */}
+       </WrongAnswerModal>
 
     </QuestionCard>
   )
@@ -168,7 +173,9 @@ function mapStateToProps(state) {
   return {
     questions: state.questions,
     index: state.index,
-    show: state.show
+    correct: state.correct,
+    correctCount: state.correctCount,
+    incorrect: state.incorrect
   }
 }
 
@@ -179,7 +186,8 @@ const mapDispatchToProps = {
   // however, the values are going to the ACTIONS that we want to able to
   // dispatch to our reducer
   shuffleQuestions: shuffleQuestions,
-  correctAnswer: correctAnswer
+  correctAnswer: correctAnswer,
+  incorrectAnswer: incorrectAnswer,
 }
 
 // Connect is a func that returns a func in which we want to pass this comp
