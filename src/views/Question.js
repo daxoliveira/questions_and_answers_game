@@ -9,7 +9,8 @@ import {
   shuffleQuestions, 
   correctAnswer,
   incorrectAnswer,
-  nextQuestion
+  nextQuestion,
+  restartGame
 } from '../redux'
 
 const QuestionCard = styled.div`
@@ -114,6 +115,8 @@ function Question(props) {
       : props.incorrectAnswer()
   }
 
+  const quitPlaying = () => props.history.push('/')
+
   
   return (
     <QuestionCard>
@@ -154,10 +157,10 @@ function Question(props) {
           <h2>
             Sorry, you didn't get it right this time!
           </h2>
-         <WrongAnswerModalButton type="submit">
+         <WrongAnswerModalButton type="submit" onClick={quitPlaying}>
            Quit Playing
          </WrongAnswerModalButton>
-         <WrongAnswerModalButton type="submit">
+         <WrongAnswerModalButton type="submit" onClick={props.restartGame}>
            Restart the Game
          </WrongAnswerModalButton>
        </WrongAnswerModal>
@@ -195,7 +198,8 @@ const mapDispatchToProps = {
   shuffleQuestions: shuffleQuestions,
   correctAnswer: correctAnswer,
   incorrectAnswer: incorrectAnswer,
-  nextQuestion: nextQuestion
+  nextQuestion: nextQuestion,
+  restartGame: restartGame
 }
 
 // Connect is a func that returns a func in which we want to pass this comp
