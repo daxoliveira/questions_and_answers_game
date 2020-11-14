@@ -162,7 +162,11 @@ function Question(props) {
          </WrongAnswerModalButton>
        </WrongAnswerModal>
 
-       <p> You've answered {props.correctCount} so far!</p>
+       <p> You've answered {
+        props.correctCount === props.questions.length
+          ? props.history.push('/gameend')
+          : props.correctCount
+        } so far!</p>
 
     </QuestionCard>
   )
