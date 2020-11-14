@@ -20,6 +20,12 @@ export function incorrectAnswer() {
   }
 }
 
+export function nextQuestion() {
+  return {
+    type: "NEXT_QUESTION"
+  }
+}
+
 //Initial State
 const initialState = {
   questions: dbQuestions,
@@ -50,7 +56,7 @@ function reducer(state = initialState, action) {
         const questionsShuffled = shuffle(state.questions)
         return {
         ...state,
-        questions: questionsShuffled,
+        questions: questionsShuffled
         }
     }
     case "CORRECT_ANSWER": {
@@ -63,7 +69,14 @@ function reducer(state = initialState, action) {
     case "INCORRECT_ANSWER": {
       return {
         ...state,
-        incorrect: true,
+        incorrect: true
+      }
+    }
+    case "NEXT_QUESTION": {
+      return {
+        ...state,
+        index: state.index + 1,
+        correct: false
       }
     }
     default:
