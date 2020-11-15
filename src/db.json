@@ -56,7 +56,7 @@
 
   {
     "id": 6,
-    "question": "How long is the gestation period of an African elephant",
+    "question": "How long is the gestation period of an African elephant?",
     "answer": {
       "22 months": true,
       "14 months": false,

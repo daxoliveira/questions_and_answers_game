@@ -1,8 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import CorrectAnswerModal from '../components/CorrectAnswerModal';
 import WrongAnswerModal from '../components/WrongAnswerModal';
-import dbQuestions from '../db.json';
+import { connect } from 'react-redux';
+
+// We need to import every action creator function we want to send to the reducer here
+import { 
+  shuffleQuestions,
+  correctAnswer,
+  incorrectAnswer,
+  nextQuestion,
+  restartGame,
+  resetGame
+} from '../redux'
 
 const QuestionCard = styled.div`
   position:fixed;
@@ -54,7 +64,7 @@ const QuestionCardBody = styled.div`
 const AnswersForm = styled.form`
   padding: 2vh;
 `
-const SingleAnswer = styled.div`
+const SingleAnswer = styled.button`
   background-color: var(--color-primary-dark);
   color: var(--font-color-primary-light);
   width: 48vw;
@@ -62,15 +72,6 @@ const SingleAnswer = styled.div`
   display: flex;
   justify-content: left;
   align-items: center;
-`
-const SubmitAnswerButton = styled.button`
-  background-color: var(--color-primary-dark);
-  margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--font-color-primary-light);
 `
 const CorrectAnswerModalButton = styled.button`
   background-color: var(--color-primary-lighter);
@@ -95,159 +96,134 @@ const WrongAnswerModalButton = styled.button`
   border-radius: 2vh;
   `
 
+function Question(props) {
+  // Extraction of pieces of state questions and index
+  const questions = props.questions
+  const index = props.index
 
-class Question extends Component {
-  constructor(props) {
-    super(props)
-    
-    this.state = {
-      questions: this.shuffle(dbQuestions),
-      correctCount: 0,
-      formRef: React.createRef(),
-      show: false
-    }
+  // Extraction of the obj answer from the 
+  const alternatives = Object.keys(questions[index].answer)
+
+
+
+  // Method to compare the value of the alternative clicked to its boolean key value
+  const checkAlternative = (event) => {
+    // Built-in method to prevent triggering of reload
+    event.preventDefault()
+
+    // Extraction of obj's key value returned from the event
+    const { value } = event.target
+
+    // Searched through answer obj keys using bracket key searching
+    // The searchable string comes from the value of the event
+    // Depending on the found key's value a different modal will display
+    questions[index].answer[value]
+
+        // If true, display Correct Answer Modal
+      ? props.correctAnswer()
+
+        // If false, display Wrong Answer Modal
+      : props.incorrectAnswer()
   }
+
+  const quitPlaying = () => {
+    props.history.push('/')
+    props.resetGame()
+  }
+
   
-  shuffle = (ar) => {
-    //fisher-yates shuffle
-    let shuffledAr = [...ar];
-    let i = ar.length -1
-    while(i > 0) {
-      let swap = Math.floor(Math.random() * i);
-      let tmp = shuffledAr[swap]
-      shuffledAr[swap] = shuffledAr[i]
-      shuffledAr[i] = tmp
-      i--
-    }
-    return shuffledAr
-  }
-
-  questionOptions = (question) => {
-    return (
-      <AnswersForm ref={this.state.formRef}>
-        <label htmlFor="answer">
-          {
-            Object.entries(question.answer)
-            .map((obj) => {
-              return this.displayOption(question, obj[0])
-              }
-            )
-          }
-        </label>
-        <br/>
-        <SubmitAnswerButton type="button" onClick={this.checkAnswer}>
-          Submit Answer
-        </SubmitAnswerButton>
-      </AnswersForm>
-    )
-  }
-
-  displayOption = (q, option) => {
-    return (
-      <SingleAnswer>
-        <input
-          type="radio"
-          name={q.id}
-          value={option}
-          onClick={() => this.setState({answer: option})}
-        /> {option}
-      </SingleAnswer>
-    )
-  }
-
-  showModal = () => {
-    this.setState({show: true})
-  }
-
-  checkAnswer = (e) => {
-    e.preventDefault();
-    if (this.state.answer && 
-      this.state.questions[0]
-      .answer[this.state.answer]) {
-      this.setState({correct: true, correctCount: this.state.correctCount+1})
-    } else {
-      this.setState({incorrect: true})
-    } 
-  }
-
-  nextQuestion = () => {
-    this.setState({ 
-      questions: this.state.questions.slice(1,this.state.questions.length),
-      answer: null
-    })
-    this.hideCorrect()
-    this.state.formRef.current.reset()
-  }
-
-  restart = () => {
-    this.setState({
-     questions: this.shuffle(dbQuestions),
-     correctCount: 0,
-     answer: null
-    })
-    this.hideIncorrect()
-    this.state.formRef.current.reset()
-  }
-
-  quit = () => {
-    this.props.history.push('/');
-  };
-
-  hideCorrect = () => {
-    this.setState({ correct: false });
-  };
-  
-  hideIncorrect = () => {
-    this.setState({ incorrect: false });
-  };
-      
-  render() {
-    return (
-      <QuestionCard>
+  return (
+    <QuestionCard>
         <QuestionCardInfo>
-          <p>{localStorage.getItem('playerName') || 'Player'}</p>
+          <p>
+            {
+              props.playerName
+            }
+          </p>
         </QuestionCardInfo>
+      <QuestionCardHeader>
+        <p>
+          {
+            // Display only the current question obj from the questions arr
+            questions[index].question
+          }
+        </p>
+      </QuestionCardHeader>
 
-        <QuestionCardHeader>
-          <p>{this.state.questions[0].question}</p>
-          {console.log(this.state.questions)}
-        </QuestionCardHeader>
+      <QuestionCardBody>
+        <AnswersForm>
+          {
+            // Display of each possible answer in btn format from alternatives array
+            alternatives.map((answer) => {
+              return(
+                <SingleAnswer onClick={(event) => {checkAlternative(event)}} value={answer}>
+                  {answer}
+                </SingleAnswer>
+              )
+            })
+          }
+        </AnswersForm>
+      </QuestionCardBody>
 
-        <QuestionCardBody>
-          {this.questionOptions(this.state.questions[0])}
-        </QuestionCardBody>
-
-
-
-      <CorrectAnswerModal show={this.state.correct} handleClose={this.hideIncorrect}>
+      <CorrectAnswerModal show={props.correct}>
         <h2>
           Congrats, you've got the correct answer!
         </h2>
-        <CorrectAnswerModalButton type="submit" onClick={this.nextQuestion}>
+        <CorrectAnswerModalButton type="submit" onClick={props.nextQuestion}>
           Next Question
         </CorrectAnswerModalButton>
       </CorrectAnswerModal>
 
-
-
-      <WrongAnswerModal show={this.state.incorrect} handleClose={this.hideIncorrect}>
+       <WrongAnswerModal show={props.incorrect}>
           <h2>
             Sorry, you didn't get it right this time!
           </h2>
-        <WrongAnswerModalButton type="submit" onClick={this.quit}>
-          Quit Playing
-        </WrongAnswerModalButton>
-        <WrongAnswerModalButton type="submit" onClick={this.restart}>
-          Restart the Game
-        </WrongAnswerModalButton>
-      </WrongAnswerModal>
+         <WrongAnswerModalButton type="submit" onClick={quitPlaying}>
+           Quit Playing
+         </WrongAnswerModalButton>
+         <WrongAnswerModalButton type="submit" onClick={props.restartGame}>
+           Restart the Game
+         </WrongAnswerModalButton>
+       </WrongAnswerModal>
 
-      <p> You've answered {this.state.correctCount === dbQuestions.length
-      ? this.props.history.push('/gameend') 
-      : this.state.correctCount} correct so far</p>
+       <p> You've answered {
+        props.correctCount === props.questions.length
+          ? props.history.push('/gameend')
+          : props.correctCount
+        } so far!</p>
+
     </QuestionCard>
-    )
+  )
+}
+
+// In this FUNCTION I express/import the globalState
+function mapStateToProps(state) {
+  // It returns an OBJECT where 
+  // the keys are the name of the prop your comp wants to use
+  // the values are the actual parts of the global state your comp wants
+  return {
+    playerName: state.playerName,
+    questions: state.questions,
+    index: state.index,
+    correct: state.correct,
+    correctCount: state.correctCount,
+    incorrect: state.incorrect
   }
 }
 
-export default Question;
+// And in this OBJECT I express which actions we want to dispatch to this comp
+const mapDispatchToProps = {
+  // Similar to what mapStateToProps() return, in this OBJECT
+  // the keys are the name of the prop your comp wants to use
+  // however, the values are going to the ACTIONS that we want to able to
+  // dispatch to our reducer
+  shuffleQuestions: shuffleQuestions,
+  correctAnswer: correctAnswer,
+  incorrectAnswer: incorrectAnswer,
+  nextQuestion: nextQuestion,
+  restartGame: restartGame,
+  resetGame: resetGame
+}
+
+// Connect is a func that returns a func in which we want to pass this comp
+export default connect(mapStateToProps, mapDispatchToProps)(Question);
