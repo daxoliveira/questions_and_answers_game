@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 
 // We need to import every action creator function we want to send to the reducer here
 import { 
-  shuffleQuestions, 
+  shuffleQuestions,
   correctAnswer,
   incorrectAnswer,
   nextQuestion,
-  restartGame
+  restartGame,
+  resetGame
 } from '../redux'
 
 const QuestionCard = styled.div`
@@ -29,6 +30,16 @@ const QuestionCard = styled.div`
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: var(--font-color-primary-light);
+`
+const QuestionCardInfo = styled.div`
+  background-color: var(--color-primary-dark);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  font-size: calc(10px + 2vmin);
+  color: var(--font-color-secondary);
+  border-radius: 2vh;
 `
 const QuestionCardHeader = styled.div`
   background-color: var(--color-secondary);
@@ -115,11 +126,21 @@ function Question(props) {
       : props.incorrectAnswer()
   }
 
-  const quitPlaying = () => props.history.push('/')
+  const quitPlaying = () => {
+    props.history.push('/')
+    props.resetGame()
+  }
 
   
   return (
     <QuestionCard>
+        <QuestionCardInfo>
+          <p>
+            {
+              props.playerName
+            }
+          </p>
+        </QuestionCardInfo>
       <QuestionCardHeader>
         <p>
           {
@@ -181,6 +202,7 @@ function mapStateToProps(state) {
   // the keys are the name of the prop your comp wants to use
   // the values are the actual parts of the global state your comp wants
   return {
+    playerName: state.playerName,
     questions: state.questions,
     index: state.index,
     correct: state.correct,
@@ -199,7 +221,8 @@ const mapDispatchToProps = {
   correctAnswer: correctAnswer,
   incorrectAnswer: incorrectAnswer,
   nextQuestion: nextQuestion,
-  restartGame: restartGame
+  restartGame: restartGame,
+  resetGame: resetGame
 }
 
 // Connect is a func that returns a func in which we want to pass this comp

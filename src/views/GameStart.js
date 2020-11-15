@@ -1,6 +1,12 @@
-import React, { Component } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import PlayerModal from '../components/PlayerModal';
+import { connect } from 'react-redux';
+import { 
+  showNameForm,
+  playerNameInput,
+  hideNameForm
+} from '../redux'
 
 const GameStartCard = styled.main`
   background-color: var(--color-primary-light);
@@ -63,62 +69,73 @@ const PlayerModalButton = styled.button`
   border-radius: 2vh;
 `
 
-class GameStart extends Component {
-  constructor (props) {
-    super(props)
+function GameStart(props) {
 
-    this.state = {
-      playerName: '',
-      loggedIn: false,
-      show: false
-    }
+  const captureKeyboardHits = (e) => {
+    props.playerNameInput(e.target.value)
   }
 
-  showModal = () => {
-    this.setState({ show: true });
-  };
-
-  hideModal = () => {
-    this.setState({ show: false });
-  };
-
-  handleChange = (e) => {
-    this.setState({playerName: e.target.value})
-  }
-
-  handleSubmit = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    localStorage.setItem('playerName', this.state.playerName)
-    this.hideModal()
-    this.props.history.push('/question')
+    props.hideNameForm()
+    props.history.push('/question')
   }
 
-
-  render() {
     return (
       <GameStartCard>
         <p>
           Click below and type your name to start playing
         </p>
-        <GameStartButton type="button" onClick={this.showModal}>
+        <GameStartButton type="button" onClick={props.showNameForm}>
           Start Playing
         </GameStartButton>
 
-        <PlayerModal show={this.state.show} handleClose={this.hideModal}>
-          <PlayerModalForm onSubmit={this.handleSubmit}>
+        <PlayerModal show={props.nameFormDisplayed} >
+          <PlayerModalForm onSubmit={handleSubmit}>
             <label>
               Name of the Player
               <br/>
-              <PlayerModalInput type="text" name="playerName" placeholder="John Doe" onChange={this.handleChange} value={this.state.playerName}/>
+              <PlayerModalInput
+               type="text"
+               name="playerName" 
+               placeholder="John Doe"
+               onChange={captureKeyboardHits}
+               value={props.playerName}
+              />
             </label>
             <br/>
-              <PlayerModalButton type="submit">Submit and start playing!</PlayerModalButton>
+            <PlayerModalButton type="submit">
+              Submit and start playing!
+            </PlayerModalButton>
           </PlayerModalForm>
         </PlayerModal>
 
       </GameStartCard>
     )
   }
+
+// In this FUNCTION I express/import the globalState
+function mapStateToProps(state) {
+  // It returns an OBJECT where 
+  // the keys are the name of the prop your comp wants to use
+  // the values are the actual parts of the global state your comp wants
+  return {
+    questions: state.questions,
+    nameFormDisplayed: state.nameFormDisplayed,
+    playerName: state.playerName
+  }
 }
 
-export default GameStart;
+// And in this OBJECT I express which actions we want to dispatch to this comp
+const mapDispatchToProps = {
+  // Similar to what mapStateToProps() return, in this OBJECT
+  // the keys are the name of the prop your comp wants to use
+  // however, the values are going to the ACTIONS that we want to able to
+  // dispatch to our reducer
+  showNameForm: showNameForm,
+  playerNameInput: playerNameInput,
+  hideNameForm: hideNameForm
+}
+
+// Connect is a func that returns a func in which we want to pass this comp
+export default connect(mapStateToProps, mapDispatchToProps)(GameStart);
